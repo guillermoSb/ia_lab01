@@ -23,31 +23,46 @@ class Problem:
         initial_node = Node(None, self.initial_state, None, 0)
         frontier = [initial_node]
         explored = set()
+        it = 0
         while True:
             if len(frontier) == 0:
                 return None
-            node = frontier.pop()
+            # Choice
+            node = self.remove_choice(frontier)
+
+            # Test
             if self.goal_test(node.state):
+                print("Problem solved in: ", it, "iterations")
                 return node
+
+            # Expand
             explored.add((node.state.x, node.state.y))
             for action in self.action(node.state):
                 child = self.child_node(node, action)
+
                 if child.path_cost == math.inf:
                     continue
+                # Validate that the child is not on the frontier
                 child_in_frontier = False
-                lower_cost = None
                 for i in range(0, len(frontier)):
                     if frontier[i].state == child.state:
                         child_in_frontier = True
 
-                    if frontier[i].path_cost > child.path_cost:
-                        lower_cost = i
-
                 if not child_in_frontier and (child.state.x, child.state.y) not in explored:
                     frontier.insert(0, child)
-                elif lower_cost is not None:
-                    print(child)
-                    frontier[lower_cost] = child
+            it += 1
+
+
+    def remove_choice(self, frontier):
+        min_cost = math.inf
+        idx = None
+        for path_idx in range(0, len(frontier)):
+            if (frontier[path_idx].heuristic(self.goal_states) + frontier[path_idx].path_cost) < min_cost:
+                idx = path_idx
+                min_cost = frontier[path_idx].path_cost + frontier[path_idx].heuristic(self.goal_states)
+        if idx is not None:
+            return frontier.pop(idx)
+        return None
 
     def action(self, s):
         return s.possible_actions(self.grid.GRID_SIZE, copy.copy(self.actions))

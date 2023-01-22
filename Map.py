@@ -11,7 +11,7 @@ GREEN = (0, 255, 0, 255)
 
 
 class Map:
-    GRID_SIZE = 100
+    GRID_SIZE = 200
     map_matrix = []     # Matrix to store the map information
     start_added = False
     start_coords = None
