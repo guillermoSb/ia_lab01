@@ -1,16 +1,18 @@
 import copy
 import math
 
+import numpy as np
+
 from Map import BLACK, GREEN
 from Node import Node
+from AgentAction import AgentAction
 
 
 class Problem:
     initial_state = None
     goal_states = None
     grid = None
-    actions = ["LEFT", "RIGHT", "TOP", "BOTTOM"]
-
+    actions = [AgentAction("LEFT"), AgentAction("RIGHT"), AgentAction("TOP"), AgentAction("BOTTOM")]
 
     def __init__(self, initial_state, goal_states, grid):
         self.initial_state = initial_state
@@ -27,7 +29,7 @@ class Problem:
             node = frontier.pop()
             if self.goal_test(node.state):
                 return node
-            explored.add(node.state)
+            explored.add((node.state.x, node.state.y))
             for action in self.action(node.state):
                 child = self.child_node(node, action)
                 if child.path_cost == math.inf:
@@ -37,64 +39,30 @@ class Problem:
                 for i in range(0, len(frontier)):
                     if frontier[i].state == child.state:
                         child_in_frontier = True
+
                     if frontier[i].path_cost > child.path_cost:
                         lower_cost = i
 
-                if not child_in_frontier and child.state not in explored:
+                if not child_in_frontier and (child.state.x, child.state.y) not in explored:
                     frontier.insert(0, child)
                 elif lower_cost is not None:
+                    print(child)
                     frontier[lower_cost] = child
 
-
-
-
     def action(self, s):
-        agent_x, agent_y = s
-        possible_actions = ["LEFT", "RIGHT", "TOP", "BOTTOM"]
-        # Agent cant go left if it is on x 0
-        if agent_x == 0:
-            idx = possible_actions.index("LEFT")
-            possible_actions.pop(idx)
-        # Agent can only go right if the x is lower than the size of the grid
-        if agent_x >= self.grid.GRID_SIZE - 1:
-            idx = possible_actions.index("RIGHT")
-            possible_actions.pop(idx)
-        # Agent cant go top if it is on y 0
-        if agent_y == 0:
-            idx = possible_actions.index("TOP")
-            possible_actions.pop(idx)
-        # Agent can only go to the bottom if the y is lower than the size of the grid
-        if agent_y >= self.grid.GRID_SIZE - 1:
-            idx = possible_actions.index("BOTTOM")
-            possible_actions.pop(idx)
-
-        return possible_actions
-
+        return s.possible_actions(self.grid.GRID_SIZE, copy.copy(self.actions))
 
     def result(self, s, a):
-
-        new_state = list(copy.copy(s))
-        if a == "LEFT":
-            new_state[0] -= 1
-        elif a == "RIGHT":
-            new_state[0] += 1
-        elif a == "TOP":
-            new_state[1] -= 1
-        elif a == "BOTTOM":
-            new_state[1] += 1
-        return (new_state[0], new_state[1])
-
+        new_state = a.result(s)
+        return new_state
 
     def goal_test(self, s):
+
         if s in self.goal_states:
-            print(s)
-            print(self.goal_states)
             return True
         return False
 
-
     def path_cost(self, p):
-        # path item -> [s, a, s1]
         cost = 0
         for path_item in p:
             cost += self.step_cost(path_item[0], path_item[1], path_item[2])
@@ -102,7 +70,7 @@ class Problem:
 
     def step_cost(self, s, a):
         new_state = self.result(s, a)
-        agent_x, agent_y = new_state
+        agent_x, agent_y = new_state.x, new_state.y
         # Cannot go to a BLACK node
         if self.grid.map_matrix[agent_x][agent_y] == BLACK:
             return math.inf
