@@ -1,6 +1,8 @@
 from Map import Map
 from Problem import Problem
 import time
+import sys
+
 
 # todo - implement data structures for the A* algorithm
 # todo - implement path finding for the A* algorithm
@@ -14,6 +16,7 @@ if __name__ == '__main__':
     locations = []
     visited = None
 
+
     if sol is not None:
         path_cost = sol.path_cost
         visited = problem.visited
@@ -24,7 +27,9 @@ if __name__ == '__main__':
         print("Solution cost: ", path_cost)
         map.draw_visited(visited)
         map.draw_path(locations)
+        map.draw_start()
         map.draw_image()
+
 
 
 

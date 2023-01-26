@@ -39,9 +39,19 @@ class Map:
                 elif color is RED and self.start_added:
                     color = WHITE
                 if color is GREEN:
-                    self.goal_states.append(AgentState(x, y))
+                    if not self.has_near_goal_state(15, x, y):
+                        self.goal_states.append(AgentState(x, y))
                 col.append(color)
             self.map_matrix.append(col)
+
+    def has_near_goal_state(self, th, x, y):
+        new_x = max(0, x - th)
+        new_y = max(0, y - th)
+        for dx in range(new_x, min(x + th, self.GRID_SIZE)):
+            for dy in range(new_y, min(y + th, self.GRID_SIZE)):
+                if AgentState(dx, dy) in self.goal_states:
+                    return True
+        return False
 
     def draw_path(self, locations):
         for location in locations:
@@ -52,6 +62,9 @@ class Map:
         for location in visited:
             x,y = location
             self.map_matrix[x][y] = (0,255,255,255)
+
+    def draw_start(self):
+        self.map_matrix[self.start_coords.x][self.start_coords.y] = (255, 0, 0, 255)
 
     @staticmethod
     def get_color( r, g, b):
