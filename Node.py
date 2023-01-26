@@ -6,6 +6,7 @@ class Node:
     state = None
     action = None
     path_cost = None
+    node_count = 0
 
     def __init__(self, parent, state, action, path_cost):
         self.parent = parent

@@ -29,7 +29,7 @@ class Problem:
             if len(frontier) == 0:
                 return None
             # Choice
-            node = self.remove_choice(frontier)
+            node = self.remove_choice_bfs(frontier)
 
             # Test
             if self.goal_test(node.state):
@@ -67,6 +67,18 @@ class Problem:
             return frontier.pop(idx)
         return None
 
+    def remove_choice_bfs(self, frontier):
+        min_cost = math.inf
+        idx = None
+        for path_idx in range(0, len(frontier)):
+            fn = frontier[path_idx].node_count
+            if fn < min_cost:
+                idx = path_idx
+                min_cost = fn
+        if idx is not None:
+            return frontier.pop(idx)
+        return None
+
     def action(self, s):
         return s.possible_actions(self)
 
@@ -97,4 +109,7 @@ class Problem:
     def child_node(self, parent, action):
         s = self.result(parent.state, action)
         path_cost = parent.path_cost + self.step_cost(parent.state, action)
-        return Node(parent, s, action, path_cost)
+        node = Node(parent, s, action, path_cost)
+        if node.parent is not None:
+            node.node_count = node.parent.node_count + 1
+        return node

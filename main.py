@@ -8,7 +8,7 @@ import sys
 # todo - implement path finding for the A* algorithm
 
 if __name__ == '__main__':
-    map = Map('turing.png')
+    map = Map('test.png')
     problem = Problem(map.start_coords,map.goal_states, map)
     start = time.time()
     sol = problem.solve()
