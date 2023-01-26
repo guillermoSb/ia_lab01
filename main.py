@@ -12,12 +12,17 @@ if __name__ == '__main__':
     sol = problem.solve()
     end = time.time()
     locations = []
+    visited = None
 
     if sol is not None:
+        path_cost = sol.path_cost
+        visited = problem.visited
         while sol.parent is not None:
             locations.append(sol.state)
             sol = sol.parent
         print("Solution time: ", (end - start) * 1000, "ms")
+        print("Solution cost: ", path_cost)
+        map.draw_visited(visited)
         map.draw_path(locations)
         map.draw_image()
 

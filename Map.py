@@ -48,6 +48,11 @@ class Map:
             x,y = (location.x, location.y)
             self.map_matrix[x][y] = (0,0,255,255)
 
+    def draw_visited(self, visited):
+        for location in visited:
+            x,y = location
+            self.map_matrix[x][y] = (0,255,255,255)
+
     @staticmethod
     def get_color( r, g, b):
         color = np.array([r,g,b])

@@ -13,6 +13,7 @@ class Problem:
     goal_states = None
     grid = None
     actions = [AgentAction("LEFT"), AgentAction("RIGHT"), AgentAction("TOP"), AgentAction("BOTTOM")]
+    visited = None
 
     def __init__(self, initial_state, goal_states, grid):
         self.initial_state = initial_state
@@ -33,6 +34,7 @@ class Problem:
             # Test
             if self.goal_test(node.state):
                 print("Problem solved in: ", it, "iterations")
+                self.visited = explored
                 return node
 
             # Expand
@@ -57,15 +59,16 @@ class Problem:
         min_cost = math.inf
         idx = None
         for path_idx in range(0, len(frontier)):
-            if (frontier[path_idx].heuristic(self.goal_states) + frontier[path_idx].path_cost) < min_cost:
+            fn = (frontier[path_idx].heuristic(self.goal_states) + frontier[path_idx].path_cost)
+            if fn < min_cost:
                 idx = path_idx
-                min_cost = frontier[path_idx].path_cost + frontier[path_idx].heuristic(self.goal_states)
+                min_cost = fn
         if idx is not None:
             return frontier.pop(idx)
         return None
 
     def action(self, s):
-        return s.possible_actions(self.grid.GRID_SIZE, copy.copy(self.actions))
+        return s.possible_actions(self)
 
     def result(self, s, a):
         new_state = a.result(s)
