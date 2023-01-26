@@ -8,14 +8,22 @@ import sys
 # todo - implement path finding for the A* algorithm
 
 if __name__ == '__main__':
-    map = Map('test.png')
-    problem = Problem(map.start_coords,map.goal_states, map)
+
+    if len(sys.argv) < 3:
+        print("No se han enviado todos los campos. Revise el README.md")
+        exit()
+    file = sys.argv[1]
+    algorithm = sys.argv[2]
+    if algorithm not in ['bfs', 'dfs', 'as']:
+        print("El algoritmo ingresado no es valido. Opciones: bfs, dfs, as")
+        exit()
+    map = Map(file)
+    problem = Problem(map.start_coords,map.goal_states, map, algorithm)
     start = time.time()
     sol = problem.solve()
     end = time.time()
     locations = []
     visited = None
-
 
     if sol is not None:
         path_cost = sol.path_cost

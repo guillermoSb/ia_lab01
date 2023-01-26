@@ -14,11 +14,13 @@ class Problem:
     grid = None
     actions = [AgentAction("LEFT"), AgentAction("RIGHT"), AgentAction("TOP"), AgentAction("BOTTOM")]
     visited = None
+    algorithm = 0
 
-    def __init__(self, initial_state, goal_states, grid):
+    def __init__(self, initial_state, goal_states, grid, algorithm = 'bfs'):
         self.initial_state = initial_state
         self.goal_states = goal_states
         self.grid = grid
+        self.algorithm = algorithm
 
     def solve(self):
         initial_node = Node(None, self.initial_state, None, 0)
@@ -29,8 +31,17 @@ class Problem:
             if len(frontier) == 0:
                 return None
             # Choice
-            node = self.remove_choice_bfs(frontier)
+            node = None
 
+            if self.algorithm == 'bfs':
+                # BFS
+                node = self.remove_choice_bfs(frontier)
+            elif self.algorithm == 'dfs':
+                # DFS
+                node = self.remove_choice_dfs(frontier)
+            else:
+                # A*
+                node = self.remove_choice(frontier)
             # Test
             if self.goal_test(node.state):
                 print("Problem solved in: ", it, "iterations")
@@ -55,7 +66,9 @@ class Problem:
             it += 1
 
 
+
     def remove_choice(self, frontier):
+
         min_cost = math.inf
         idx = None
         for path_idx in range(0, len(frontier)):
@@ -70,11 +83,27 @@ class Problem:
     def remove_choice_bfs(self, frontier):
         min_cost = math.inf
         idx = None
+
         for path_idx in range(0, len(frontier)):
             fn = frontier[path_idx].node_count
             if fn < min_cost:
                 idx = path_idx
                 min_cost = fn
+        if idx is not None:
+            return frontier.pop(idx)
+
+        return None
+
+    def remove_choice_dfs(self, frontier):
+        max_cost = 0
+        idx = None
+        if len(frontier) == 1:
+            return frontier.pop(0)
+        for path_idx in range(0, len(frontier)):
+            fn = frontier[path_idx].node_count
+            if fn > max_cost:
+                idx = path_idx
+                max_cost = fn
         if idx is not None:
             return frontier.pop(idx)
         return None
