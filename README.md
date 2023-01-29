@@ -1,6 +1,8 @@
  # Problemas de Busqueda
  ## Inteligencia Artifical - Laboratorio 01
 Guillermo Santos - 191517
+
+[Video](https://www.youtube.com/watch?v=DgK10N5jDBA)
 <hr>
 
 # Como utilizar el programa
