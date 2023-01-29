@@ -18,7 +18,7 @@ Donde:
 3. `<heuristica>` Heuristica a utilizar:
    1. `1` para Manhattan Distance
    2. `2` para distancia en linea recta
-
+   
 
 # Output esperado
 `python turing.png as 1`

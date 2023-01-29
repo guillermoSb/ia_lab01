@@ -14,7 +14,9 @@ if __name__ == '__main__':
         exit()
     file = sys.argv[1]
     algorithm = sys.argv[2]
-    heuristics = sys.argv[3]
+    heuristics = '1'
+    if len(sys.argv) >= 4:
+        heuristics = sys.argv[3]
     if algorithm not in ['bfs', 'dfs', 'as']:
         print("El algoritmo ingresado no es valido. Opciones: bfs, dfs, as")
         exit()
