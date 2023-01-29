@@ -15,8 +15,14 @@ Donde:
    1. `bfs` para Breadth First Search
    2. `dfs` para Depth First Search
    3. `as` para A*
+3. `<heuristica>` Heuristica a utilizar:
+   1. `1` para Manhattan Distance
+   2. `2` para distancia en linea recta
+
 
 # Output esperado
+`python turing.png as 1`
+
 Para el siguiente input, el output es una imagen que muestra en azul el camino encontrado.
 ![image info](./turing.png)
 ![image info](./example_output.jpg)

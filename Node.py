@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 class Node:
@@ -17,7 +18,17 @@ class Node:
     def __eq__(self, other):
         return self.state == other.state
 
-    def heuristic(self, goal_states):
-        mh_distances = np.array([(abs(state.x - self.state.x) + abs(state.y - self.state.y)) for state in goal_states])
-        return mh_distances.min()
+    def heuristic(self, goal_states, heuristics):
+        if heuristics == '1':
+            mh_distances = np.array(
+                [(abs(state.x - self.state.x) + abs(state.y - self.state.y)) for state in goal_states]
+            )
+            return mh_distances.min()
+        elif heuristics == '2':
+            distances = np.array(
+                [(math.sqrt(math.pow(state.x - self.state.x, 2) + math.pow(state.y - self.state.y, 2))) for state in
+                 goal_states]
+            )
+            return distances.min()
+
 

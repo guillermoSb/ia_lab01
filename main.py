@@ -14,11 +14,17 @@ if __name__ == '__main__':
         exit()
     file = sys.argv[1]
     algorithm = sys.argv[2]
+    heuristics = sys.argv[3]
     if algorithm not in ['bfs', 'dfs', 'as']:
         print("El algoritmo ingresado no es valido. Opciones: bfs, dfs, as")
         exit()
+
+    if heuristics not in ['1', '2']:
+        print("La heuristica no es valida. Opciones: 1,2")
+        exit()
+
     map = Map(file)
-    problem = Problem(map.start_coords,map.goal_states, map, algorithm)
+    problem = Problem(map.start_coords,map.goal_states, map, algorithm, heuristics)
     start = time.time()
     sol = problem.solve()
     end = time.time()

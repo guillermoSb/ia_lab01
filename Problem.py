@@ -14,13 +14,14 @@ class Problem:
     grid = None
     actions = [AgentAction("LEFT"), AgentAction("RIGHT"), AgentAction("TOP"), AgentAction("BOTTOM")]
     visited = None
-    algorithm = 0
-
-    def __init__(self, initial_state, goal_states, grid, algorithm = 'bfs'):
+    algorithm = 'as'
+    heuristics = '1'
+    def __init__(self, initial_state, goal_states, grid, algorithm = 'bfs', heuristics = '1'):
         self.initial_state = initial_state
         self.goal_states = goal_states
         self.grid = grid
         self.algorithm = algorithm
+        self.heuristics = heuristics
 
     def solve(self):
         initial_node = Node(None, self.initial_state, None, 0)
@@ -42,6 +43,7 @@ class Problem:
             else:
                 # A*
                 node = self.remove_choice(frontier)
+
             # Test
             if self.goal_test(node.state):
                 print("Problem solved in: ", it, "iterations")
@@ -72,7 +74,7 @@ class Problem:
         min_cost = math.inf
         idx = None
         for path_idx in range(0, len(frontier)):
-            fn = (frontier[path_idx].heuristic(self.goal_states) + frontier[path_idx].path_cost)
+            fn = (frontier[path_idx].heuristic(self.goal_states, self.heuristics) + frontier[path_idx].path_cost)
             if fn < min_cost:
                 idx = path_idx
                 min_cost = fn
